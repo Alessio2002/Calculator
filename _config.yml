@@ -1,0 +1,44 @@
+# _config.yml
+
+# Site settings
+title: Calculator
+description: >-
+  A simple Jekyll site powered by GitHub Pages by Alessio2002
+baseurl: "/Calculator"    # <== Important! Set this to your repo name with leading slash
+url: "https://alessio2002.github.io"  # Your GitHub Pages root URL (no trailing slash)
+
+# Build settings
+markdown: kramdown
+theme: jekyll-theme-primer
+
+# Sass/SCSS settings
+sass:
+  style: compressed
+  sass_dir: _sass
+
+# Exclude files/folders from build
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - vendor/bundle
+
+# Plugins
+plugins:
+  - jekyll-seo-tag
+  - jekyll-paginate
+  - jekyll-feed
+
+# Pagination
+paginate: 5
+paginate_path: "/page:num/"
+
+# Defaults for posts/pages
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
