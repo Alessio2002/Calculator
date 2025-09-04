@@ -29,7 +29,8 @@ const App = () => {
 
       expression = parsePercentages(expression);
 
-      const result = eval(expression);
+      const result = Function('"use strict"; return (' + expression + ")")(); // safer than eval
+
       setCalcInput(String(result));
       setHistory((prev) => [...prev, { expression: calcInput, result }]);
     } catch {
@@ -38,14 +39,17 @@ const App = () => {
   };
 
   const parsePercentages = (expr) => {
+    const decimalNumber = "\\d*\\.?\\d+";
+    const regex1 = new RegExp(
+      `(${decimalNumber})([+\\-*\\/])\\s*(${decimalNumber})%`,
+      "g"
+    );
+
     return expr
-      .replace(
-        /(\d+)([\+\-\*\/])\s*(\d+)%/g,
-        (match, base, operator, percent) => {
-          return `${base}${operator}(${base}*${percent}/100)`;
-        }
-      )
-      .replace(/(\d+)%/g, "($1/100)");
+      .replace(regex1, (match, leftNumber, operator, percent) => {
+        return `${leftNumber}${operator}(${leftNumber}*${percent}/100)`;
+      })
+      .replace(new RegExp(`(${decimalNumber})%`, "g"), "($1/100)");
   };
 
   // General rounding to decimals (optional)
@@ -72,7 +76,9 @@ const App = () => {
           .replace(/√/g, "Math.sqrt")
           .replace(/\^/g, "**");
 
-        const evaluated = eval(expression);
+        const evaluated = Function(
+          '"use strict"; return (' + expression + ")"
+        )();
 
         if (typeof evaluated === "number" && !isNaN(evaluated)) {
           const factor = 10 ** decimals;
@@ -119,7 +125,7 @@ const App = () => {
         .replace(/√/g, "Math.sqrt")
         .replace(/\^/g, "**");
 
-      const evaluated = eval(expression);
+      const evaluated = Function('"use strict"; return (' + expression + ")")();
 
       if (typeof evaluated === "number" && !isNaN(evaluated)) {
         const rounded = customRoundNearestDecimal(evaluated);
